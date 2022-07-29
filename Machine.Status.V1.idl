@@ -1,0 +1,25 @@
+module Komatsu{
+
+	module Machine {
+
+		module StatusV1 {
+
+			module Type {
+					
+				enum StatusEnum {
+					GOOD,
+					BAD,
+					DEGRADED
+				};
+				
+			};
+			module Message {
+				@top_level
+				struct StatusMessage
+				{
+					Type::StatusEnum Status;
+				};
+			};
+		};
+	};
+};

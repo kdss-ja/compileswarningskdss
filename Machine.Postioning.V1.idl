@@ -1,0 +1,48 @@
+#include "Machine.Shared.V1.idl"
+
+module Komatsu {
+
+	module Machine {
+
+		// The Komatsu.Machine.EquipmentPositioning namespace is a shared/common namespace for ALL digital twins
+		// that need to publish equipment positioning information. That includes in the future Trucks, Dozers, Drills, etc.
+		
+		// The general use case for Komatsu.Machine.EquipmentPositioning is to share equipment positions for 
+		// centralised fleet/asset tracking and drawing equipment on maps in both embedded and central.
+		
+		// It is NOT designed for safety systems like collision awareness.
+
+		module EquipmentPositioningV1 {
+
+			module Message {
+
+				// POSITIONING
+				struct EquipmentPositioning {
+
+					string<30> TimeUtc;	// System time in UTC from the computer	running the Digital Twin
+
+					Komatsu::Machine::SharedV1::Type::MachineTypeEnum MachineType;
+
+					Komatsu::Machine::SharedV1::Type::MachinePositionCoordinates Position;
+
+					@Optional
+						Komatsu::Machine::SharedV1::Type::MachineOrientation Orientation;
+
+					@Optional
+						Komatsu::Machine::SharedV1::Type::GPSQualityData GPSQuality;
+
+					@Optional
+						double Speed;
+
+					// This still have some engineering decisions on how to handle 
+					// the difference between Heading and Yaw.
+					// When Pitch and Roll are 0, Heading and Yaw are equal.
+					// But when Pitch and Roll increase Heading and Yaw diverge.
+					@Optional
+						double Heading;
+				};
+
+			};
+		};
+	};
+};

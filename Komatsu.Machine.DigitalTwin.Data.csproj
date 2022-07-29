@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Komatsu.Machine.DigitalTwin.Data</RootNamespace>
+    <UsePreprocessor>true</UsePreprocessor> <!-- ENABLES DDS IDL PREPROCESSOR DIRECTIVES -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+    <!-- Nuget package properties -->
+    <PackageId>Komatsu.Machine.DigitalTwin.API</PackageId>
+    <Description>
+      Provides Komatus DDS Data Transfer Objects (DTOs) for the Komatsu Machine Digital Twin API. Generated from compiled IDL.
+
+      See README here :
+
+      http://mwbnebuild15v:8080/tfs/MineWare/Systems/_git/engineering-argus-framework?path=%2Flibraries%2FKomatsu.Machine.DigitalTwin.Data%2FREADME-NuGet.md%26_a=preview
+    </Description>
+    <Authors>Machine Algorithms Team, Innovation and Applications Brisbane</Authors>
+    <Company>Komatsu MTS</Company>
+    <Copyright>© $(Company) $([System.DateTime]::Now.Year)</Copyright>
+    <PackageProjectUrl>https://dev.azure.com/MTSEngineering/MATE</PackageProjectUrl>
+    <RepositoryUrl>https://dev.azure.com/MTSEngineering/MATE/_git/machine-digital-twin-framework</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>digital-twin-api-package-icon.png</PackageIcon>
+    <PackageReadmeFile>README-NuGet.md</PackageReadmeFile>
+    
+    <!--https://dev.to/j_sakamoto/writing-a-nuget-package-release-notes-in-an-outside-of-a-csproj-file-3f94-->
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+    <AnalysisLevel>none</AnalysisLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README-NuGet.md" Pack="true" PackagePath="\" />
+    <None Include="digital-twin-api-package-icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IDL Include="Machine.LoadingUnit.V1.idl" />
+    <IDL Include="Machine.Postioning.V1.idl" />
+    <IDL Include="Machine.Shared.V1.idl" />
+    <IDL Include="Machine.Status.V1.Guidance.idl" />
+    <IDL Include="Machine.Status.V1.idl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Komatsu.DDS.Build.Task" Version="1.0.5-rc001" PrivateAssets="all" ExcludeAssets="runtime" NoWarn="NU1605">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Komatsu.DDS.Governance" Version="1.4.0-dev001" PrivateAssets="all" ExcludeAssets="runtime" NoWarn="NU1605">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <!-- 
+      JH 06-APR-22
+      The ExcludeAssets="runtime" was added so the Komatsu.DDS.*.dll DOESN'T get copied
+      to the output folder. This DLL is only needed to build IDL into classes and it is not needed
+      during runtime. Also if you include this DLL in the output then when TPIA tries to load the 
+      plugin it also looks for it's references which are Microsoft.Build.Tasks.Core.dll and Microsoft.Build.Framework.dll
+      
+      The NoWarn="NU1605" was added so Visual Studio doesn't show a little yellow warning icon over this reference.
+      -->
+  </ItemGroup>
+
+  <Target Name="PreparePackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec">
+    <PropertyGroup>
+      <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/NugetReleaseNotes.txt"))</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
+</Project>

@@ -1,0 +1,138 @@
+module Komatsu{
+
+	module Machine {
+
+		module SharedV1 {
+
+			module Type {
+
+				enum MachineTypeEnum {
+					ELECTRIC_SHOVEL,
+					HYDRAULIC_EXCAVATOR,
+					HYDRAULIC_SHOVEL,
+					WHEEL_LOADER
+				};
+
+				// ==================================================
+				// Positioning Types.
+
+				struct Coordinate {
+					double X;
+					double Y;
+					double Z; 
+				};
+
+				struct GeographicCoordinate {
+					double Latitude;
+					double Longitude;
+
+					@Optional
+					float Elevation;
+				};
+
+				struct ProjectedCoordinate {
+					double Easting;
+					double Northing;
+					float Elevation; // in meters
+				};
+
+				struct GPSAntennaPositionCoordinates {
+					GeographicCoordinate LocalGeographicPosition;			// In this context "Local" is short for "Local Datum"
+					ProjectedCoordinate LocalPosition;						// In this context "Local" is short for "Local Projection"
+				};
+
+				struct MachinePositionCoordinates {
+					GeographicCoordinate LocalGeographicPosition;			// In this context "Local" is short for "Local Datum"
+					ProjectedCoordinate LocalPosition;						// In this context "Local" is short for "Local Projection"
+				};
+
+				struct BucketPositionCoordinates
+				{
+					Coordinate BucketXZCoordinate;
+
+					@Optional
+					ProjectedCoordinate BucketLocalCoordinate;				// In this context "Local" is short for "Local Projection", i.e. Eastings & Northings
+				};
+
+				// ==================================================
+				// Orientation.
+
+				struct MachineOrientation {
+					// Clockwise, the number of decimal degrees (0 to 360)
+					// the front of the operator's cab is facing relative to North (0 degrees)
+					@Optional
+					float Yaw;
+
+					//The forward/backward tilt in decimal degrees, of a chassis along an axis running left-to-right
+					//through the chassis mid-point. Full forward tilt (face-down) is -90 degrees.
+					//Full backward tilt (face-up) is 90 degrees.
+					@Optional
+					float Pitch;
+
+					//The left/right tilt in decimal degrees, of a chassis along an axis running front-to-rear
+					//through the chassis mid-point. Right tilt is 0 to -90 degrees; left tilt is 0 and 90 degrees.
+					@Optional
+					float Roll;
+				};
+
+				// ==================================================
+				// GPS Types.
+
+				enum GPSFixType {
+					@value(0) INVALID,
+					@value(1) FIX,
+					@value(2) DGPS,
+					@value(3) PPS,
+					@value(4) RTK,
+					@value(5) RTK_FLOAT,
+					@value(6) ESTIMATED,
+					@value(7) MANUAL,
+					@value(8) SIMULATION
+				};
+
+				//@copy [Obsolete("Access to raw GPS data should be accessed via IoT App.")]
+				struct GPSQualityOfService {
+					GPSFixType FixType;
+					int16 NumberOfSatellites;
+					double PositionDilutionOfPrecision;
+					double HorizontalDilutionOfPrecision;
+					double VerticalDilutionOfPrecision;
+				};
+
+				//@copy [Obsolete("Access to raw GPS data should be accessed via IoT App.")]				
+				struct GPSData {
+					string<30> TimeUtc; // GPS time in UTC
+
+					// Primary antenna
+					GeographicCoordinate AntennaGeoPosition;
+
+					// Primary antenna
+					@Optional
+					ProjectedCoordinate AntennaProjectedPosition;
+
+					// From heading antenna if available
+					@Optional
+						float GpsHeading;
+
+					@Optional
+						float GpsSpeed;
+
+					@Optional
+						GPSQualityOfService GpsQoS;
+				};
+
+				enum GPSQualityTypeEmun {
+					GOOD,
+					BAD,
+					DEGRADED_LOW_SATELLITES
+				};
+
+				struct GPSQualityData {
+					GPSQualityTypeEmun QualityType;
+					int16 NumberOfSatellites;
+					GPSFixType FixType;
+				};
+			};
+		};
+	};
+};

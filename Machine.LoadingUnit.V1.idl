@@ -1,0 +1,201 @@
+#include "Machine.Shared.V1.idl"
+
+module Komatsu{
+
+	module Machine {
+
+		module LoadingUnitV1{
+
+			module Type {
+
+				// ==================================================
+				// Geometry 
+				// These are static points usually configured from a survey.
+
+				struct ElectricShovelGeometryPoints {
+					double crowdPivotX;					// Machine house frame X out of front
+					double crowdPivotZ;					// Machine house frame Z Up
+				};
+
+				// Units?
+				// Prefer without fractions
+
+				struct HydraulicExcavatorGeometryPoints {
+					double boomLength;
+					double stickLength;
+					double bucketLength;
+					double boomPositionX;
+					double boomPositionZ;
+				};
+
+				struct HydraulicShovelGeometryPoints {
+					double boomLength;
+					double stickLength;
+					double bucketLength;
+					double boomPositionX;
+					double boomPositionZ;
+				};
+
+				struct WheelLoaderGeometryPoints {
+					double boomLength;
+					double stickLength;
+					double bucketLength;
+					double boomPositionX;
+					double boomPositionZ;
+				};
+
+				union LoadingUnitGeometryPoints switch (Komatsu::Machine::SharedV1::Type::MachineTypeEnum) {
+
+					case Komatsu::Machine::SharedV1::Type::MachineTypeEnum::ELECTRIC_SHOVEL:
+						ElectricShovelGeometryPoints ElectricShovelGeometry;
+
+					case Komatsu::Machine::SharedV1::Type::MachineTypeEnum::HYDRAULIC_EXCAVATOR:
+						HydraulicExcavatorGeometryPoints HydraulicExcavatorGeometry;
+
+					case Komatsu::Machine::SharedV1::Type::MachineTypeEnum::HYDRAULIC_SHOVEL:
+						HydraulicShovelGeometryPoints HydraulicShovelGeometry;
+
+					case Komatsu::Machine::SharedV1::Type::MachineTypeEnum::WHEEL_LOADER:
+						WheelLoaderGeometryPoints WheelLoaderGeometry;
+				};
+
+				// ==================================================
+				// Kinematics
+				// These represent the moving parts of the machine like boom, stick, bucket, etc.
+				// Kinematics also represents speed, heading, articulation angle etc.
+
+				struct ElectricShovelKinematicPoints {
+					double crowdAngle;
+					double trackHeading;
+				};
+
+				struct HydraulicExcavatorKinematicPoints {
+					double stickPositionX;
+					double stickPositionZ;
+
+					double bucketPivotX;
+					double bucketPivotZ;
+
+					double bucketWishbonePivotX;
+					double bucketWishbonePivotZ;
+					double bucketWishboneTipX;
+					double bucketWishboneTipZ;
+
+					double bucketLinkX;
+					double bucketLinkZ;
+
+					double trackHeading;
+				};
+
+				struct HydraulicShovelKinematicPoints {
+					double stickPositionX;
+					double stickPositionZ;
+
+					double bucketPivotX;
+					double bucketPivotZ;
+
+					double bucketLinkX;
+					double bucketLinkZ;
+
+					double trackHeading;
+				};
+
+				struct WheelLoaderKinematicPoints {
+					double bucketPivotX;
+					double bucketPivotZ;
+
+					@Optional
+					double articulationAngle;
+				};
+
+				union LoadingUnitKinematicPoints switch (Komatsu::Machine::SharedV1::Type::MachineTypeEnum) {
+
+					case Komatsu::Machine::SharedV1::Type::MachineTypeEnum::ELECTRIC_SHOVEL:
+						ElectricShovelKinematicPoints ElectricShovelKinematics;
+
+					case Komatsu::Machine::SharedV1::Type::MachineTypeEnum::HYDRAULIC_EXCAVATOR:
+						HydraulicExcavatorKinematicPoints HydraulicExcavatorKinematics;
+
+					case Komatsu::Machine::SharedV1::Type::MachineTypeEnum::HYDRAULIC_SHOVEL:
+						HydraulicShovelKinematicPoints HydraulicShovelKinematics;
+
+					case Komatsu::Machine::SharedV1::Type::MachineTypeEnum::WHEEL_LOADER:
+						WheelLoaderKinematicPoints WheelLoaderKinematics;
+				};
+
+
+				// ==================================================
+				// ==================================================
+				
+				// Base Machine Types for machines with different senors / capabilities.
+				struct LoadingUnitBase {
+					Komatsu::Machine::SharedV1::Type::MachineTypeEnum MachineType;
+				};
+
+				// CONFIG base
+				struct LoadingUnitConfigBase : LoadingUnitBase {
+					// Geometry is fixed/static point usually set with a survey.
+					LoadingUnitGeometryPoints Geometry;
+				};
+
+				// POSITIONING base
+				//struct LoadingUnitPositioningBase : LoadingUnitBase {
+				//	
+				//	Komatsu::Machine::SharedV1::Type::MachinePositionCoordinates Position;
+				//	
+				//	@Optional
+				//	Komatsu::Machine::SharedV1::Type::MachineOrientation Orientation;
+
+				//	@Optional
+				//	Komatsu::Machine::SharedV1::Type::GPSQualityData GPSQuality;
+
+				//	@Optional
+				//	double Speed;
+				//};
+
+				// GUIDANCE base
+				struct LoadingUnitGuidanceBase : LoadingUnitBase {
+
+					Komatsu::Machine::SharedV1::Type::MachinePositionCoordinates Position;
+
+					Komatsu::Machine::SharedV1::Type::BucketPositionCoordinates BucketPosition;
+
+					// Kinematics represent the moving parts of the machine and speed, heading, articulation angle etc.
+					LoadingUnitKinematicPoints Kinematics;
+										
+					@Optional
+						Komatsu::Machine::SharedV1::Type::MachineOrientation Orientation;
+
+					@Optional
+						Komatsu::Machine::SharedV1::Type::GPSQualityData GPSQuality;
+
+					@Optional
+						double Speed;
+					
+					// This still have some engineering decisions on how to handle 
+					// the difference between Heading and Yaw.
+					// When Pitch and Roll are 0, Heading and Yaw are equal.
+					// But when Pitch and Roll increase Heading and Yaw diverge.
+					@Optional
+						double Heading;
+				};
+			};
+
+			module Message {
+
+				@top_level
+				struct LoadingUnitGuidance : Type::LoadingUnitGuidanceBase {
+
+					string<30> TimeUtc;	// System time in UTC from the computer	running the Digital Twin
+				};
+
+				@top_level
+				struct LoadingUnitConfig : Type::LoadingUnitConfigBase {
+
+				};
+
+			};
+		
+		};
+	};
+};

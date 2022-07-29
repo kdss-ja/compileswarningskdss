@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Komatsu.Machine.DigitalTwin.Data", "Komatsu.Machine.DigitalTwin.Data.csproj", "{F4A1A2C9-D52B-48D2-B00E-F8C5FEB36462}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F4A1A2C9-D52B-48D2-B00E-F8C5FEB36462}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4A1A2C9-D52B-48D2-B00E-F8C5FEB36462}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4A1A2C9-D52B-48D2-B00E-F8C5FEB36462}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4A1A2C9-D52B-48D2-B00E-F8C5FEB36462}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4019C059-0195-450A-8256-1083EE6225C2}
+	EndGlobalSection
+EndGlobal

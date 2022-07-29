@@ -1,0 +1,44 @@
+#include "Machine.Status.V1.idl"
+module Komatsu {
+
+	module Machine {
+
+		module StatusV1 {
+		
+			module Guidance {
+		
+				module Type {
+				
+					enum GnssFix {
+						@value(0) INVALID,
+						@value(1) FIX,
+						@value(2) DGPS,
+						@value(3) PPS,
+						@value(4) RTK,
+						@value(5) RTK_FLOAT,
+						@value(6) ESTIMATED,
+						@value(7) MANUAL,
+						@value(8) SIMULATION
+					};
+
+					enum KinematicSolutionQuality {
+						NOT_AVAILABLE,
+						AVAILABLE
+					};
+					
+					struct GnssQualityInfo {
+						int16 NumberOfSatellites;
+						GnssFix FixType;
+					};
+				};
+				module Message {
+					@top_level
+					struct GuidanceStatusMessage : Komatsu::Machine::StatusV1::Message::StatusMessage {
+						Type::GnssQualityInfo GnssQuality;
+						Type::KinematicSolutionQuality KinematicSolution;
+					};
+				};					
+			};
+		};
+	};
+};

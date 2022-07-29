@@ -1,0 +1,5 @@
+﻿v.1.0.7
+- Stopped Komatsu.DDS.Build.Tasks.dll from being included as a dependency. This library is used to generate C# from IDL during build time. But after the build steps this library is NOT required at runtime.
+
+v.1.0.6
+- Initial version released to the Brisbane Apps Team.
